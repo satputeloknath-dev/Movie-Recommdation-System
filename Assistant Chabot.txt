@@ -1,0 +1,91 @@
+<!-- Add this right before closing </body> tag -->
+
+<!-- Chatbot Chat Window -->
+<div id="chatbotContainer" style="position: fixed; bottom: 80px; right: 20px; width: 320px; max-height: 400px; background: #181818; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.7); display: none; flex-direction: column; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; z-index: 200;">
+  <div style="background: #ffcc00; padding: 10px; font-weight: bold; color: #101010; display: flex; justify-content: space-between; align-items: center;">
+    Cineflix Assistant
+    <button id="closeChatbot" style="background:none; border:none; font-size: 1.2rem; cursor: pointer;">✕</button>
+  </div>
+  <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 10px; color: white; font-size: 0.9rem;">
+    <div style="margin-bottom: 10px; color:#f5c518;">Hi! I’m Cineflix Assistant. How can I help you today?</div>
+  </div>
+  <form id="chatForm" style="display: flex; border-top: 1px solid #333;">
+    <input id="chatInput" autocomplete="off" placeholder="Type your message..." style="flex: 1; padding: 8px 10px; border: none; outline: none; background: #101010; color: white; font-size: 0.9rem;"/>
+    <button type="submit" style="background: #f5c518; border: none; padding: 0 15px; cursor: pointer; font-weight: bold; color: #101010;">Send</button>
+  </form>
+</div>
+
+<!-- Floating Chat Button -->
+<button id="openChatbot" title="Chat with Cineflix Assistant" style="position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background-color: #f5c518; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.3); cursor: pointer; font-size: 1.8rem; color: #101010; z-index: 200;">💬</button>
+
+<script>
+  // Chatbot toggle
+  const chatbotContainer = document.getElementById('chatbotContainer');
+  const openChatbotBtn = document.getElementById('openChatbot');
+  const closeChatbotBtn = document.getElementById('closeChatbot');
+
+  openChatbotBtn.addEventListener('click', () => {
+    chatbotContainer.style.display = 'flex';
+    openChatbotBtn.style.display = 'none';
+    document.getElementById('chatInput').focus();
+  });
+
+  closeChatbotBtn.addEventListener('click', () => {
+    chatbotContainer.style.display = 'none';
+    openChatbotBtn.style.display = 'block';
+  });
+
+  // Chat interaction
+  const chatForm = document.getElementById('chatForm');
+  const chatInput = document.getElementById('chatInput');
+  const chatMessages = document.getElementById('chatMessages');
+
+  function appendMessage(text, sender = 'bot') {
+    const msgDiv = document.createElement('div');
+    msgDiv.style.marginBottom = '10px';
+    msgDiv.style.whiteSpace = 'pre-wrap';
+    if (sender === 'user') {
+      msgDiv.style.textAlign = 'right';
+      msgDiv.style.color = '#f5c518';
+      msgDiv.textContent = text;
+    } else {
+      msgDiv.style.color = '#ddd';
+      msgDiv.textContent = text;
+    }
+    chatMessages.appendChild(msgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  // Very basic "AI" response logic
+  function getBotResponse(message) {
+    const msg = message.toLowerCase();
+    if (msg.includes('hello') || msg.includes('hi')) {
+      return "Hello! 👋 How can I assist you with your movie search today?";
+    }
+    if (msg.includes('recommend')) {
+      return "Sure! Check out the 'Trending Now' or 'Recommended For You' sections above. Want me to suggest a movie genre?";
+    }
+    if (msg.includes('genre')) {
+      return "Here are some popular genres: Action, Comedy, Drama, Horror, Sci-Fi. Let me know if you want recommendations from any of these!";
+    }
+    if (msg.includes('how to use')) {
+      return "Just browse the movies, click on any movie card to watch its trailer, or use the search bar to find movies by name. You can also chat with me anytime!";
+    }
+    if (msg.includes('thank')) {
+      return "You're welcome! Enjoy your movie time 🎬";
+    }
+    return "Sorry, I didn't quite get that. You can ask me for movie recommendations, genres, or how to use the site.";
+  }
+
+  chatForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const userMessage = chatInput.value.trim();
+    if (!userMessage) return;
+    appendMessage(userMessage, 'user');
+    chatInput.value = '';
+    setTimeout(() => {
+      const botReply = getBotResponse(userMessage);
+      appendMessage(botReply);
+    }, 600);
+  });
+</script>
