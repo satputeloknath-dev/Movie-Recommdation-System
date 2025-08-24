@@ -1,5 +1,3 @@
-<!-- Add this right before closing </body> tag -->
-
 <!-- Chatbot Chat Window -->
 <div id="chatbotContainer" style="position: fixed; bottom: 80px; right: 20px; width: 320px; max-height: 400px; background: #181818; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.7); display: none; flex-direction: column; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; z-index: 200;">
   <div style="background: #ffcc00; padding: 10px; font-weight: bold; color: #101010; display: flex; justify-content: space-between; align-items: center;">
@@ -88,4 +86,5 @@
       appendMessage(botReply);
     }, 600);
   });
+
 </script>
