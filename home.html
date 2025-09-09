@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cineflix</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav>
+    <h2>🎬 Cineflix</h2>
+    <ul>
+      <li data-page="home" class="active">Home</li>
+      <li data-page="trending">Trending</li>
+      <li data-page="genres">Genres</li>
+      <li data-page="mylist">My List</li>
+      <li data-page="recommendations">Recommendations</li>
+    </ul>
+  </nav>
+
+  <section id="home" class="page active">
+    <div class="hero-wrapper">
+      <div class="slider-container">
+        <div class="slides">
+          <img src="/img.jpg" class="slide" />
+          <img src="/img2.jpeg" class="slide" />
+          <img src="/img3.jpg" class="slide" />
+          <img src="/img4.jpeg" class="slide" />
+          <img src="/img5.jpg" class="slide" />
+        </div>
+        <button class="prev" onclick="moveSlide(-1)">❮</button>
+        <button class="next" onclick="moveSlide(1)">❯</button>
+        <div class="dots" id="dotsContainer"></div>
+      </div>
+
+      <div class="hero-content">
+        <h1>Discover Your Favorite Movie 🍿</h1>
+        <div class="search-bar">
+          <input id="searchInput" type="text" placeholder="Search movies...">
+        </div>
+        <button id="natureBtn">🌿 Nature Mode</button>
+        <div id="natureSection" class="nature-section" style="display: none;">
+          <h2>🌲 Nature & Survival Picks</h2>
+          <div id="natureList" class="movie-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <h2 id="homeResultsTitle">Search Results</h2>
+      <div id="homeResults" class="movie-list"></div>
+    </div>
+  </section>
+
+  <div id="trending" class="page">
+    <h2>Trending Now</h2>
+    <div id="trendingList" class="movie-list"></div>
+  </div>
+
+  <div id="genres" class="page">
+    <h2>Browse by Genre</h2>
+    <div class="genre-buttons">
+      <button onclick="loadGenre('Action')">Action</button>
+      <button onclick="loadGenre('Comedy')">Comedy</button>
+      <button onclick="loadGenre('Drama')">Drama</button>
+      <button onclick="loadGenre('Horror')">Horror</button>
+      <button onclick="loadGenre('Sci-Fi')">Sci-Fi</button>
+    </div>
+    <div id="genreList" class="movie-list"></div>
+  </div>
+
+  <div id="mylist" class="page">
+    <h2>My List</h2>
+    <div id="myListContainer" class="movie-list"></div>
+  </div>
+
+  <div id="recommendations" class="page">
+    <h2>Recommended For You</h2>
+    <div id="recommendationsContainer" class="movie-list"></div>
+  </div>
+
+  <div id="movieModal">
+    <span id="closeModal">&times;</span>
+    <div id="movieModalContent"></div>
+  </div>
+  <!-- Chatbot Button -->
+<div id="chatbotBtn">💬</div>
+
+<!-- Chatbot Window -->
+<div id="chatbotWindow">
+  <div id="chatHeader">Cineflix Chatbot <span id="closeChat">&times;</span></div>
+  <div id="chatMessages"></div>
+  <div id="chatInputArea">
+    <input type="text" id="chatInput" placeholder="Ask me something..." />
+    <button id="sendBtn">➤</button>
+  </div>
+</div>
+
+  <script src="scrift.js"></script>
+</body>
+</html>
