@@ -218,6 +218,7 @@ async function loadNatureMovies() {
     }
   }
 }
+<script>
 // Chatbot Toggle
 const chatbotBtn = document.getElementById("chatbotBtn");
 const chatbotWindow = document.getElementById("chatbotWindow");
@@ -253,21 +254,46 @@ function sendMessage() {
 function addMessage(text, cls) {
   const div = document.createElement("div");
   div.classList.add("message", cls);
-  div.textContent = text;
+  div.innerHTML = text; // allow poster <img>
   chatMessages.appendChild(div);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Simple Bot Logic
-function botReply(userMsg) {
+// Simple Bot Logic with OMDb API
+async function botReply(userMsg) {
   let reply = "Sorry, I didn’t understand that.";
 
-  if (/hello|hi/i.test(userMsg)) reply = "Hello 👋! Welcome to Cineflix Nature.";
-  else if (/trending/i.test(userMsg)) reply = "Click on the Trending tab to see trending movies!";
-  else if (/recommend/i.test(userMsg)) reply = "Add movies to your list first, then I’ll recommend similar ones 🌟.";
-  else if (/nature/i.test(userMsg)) reply = "Click the Nature button 🌿 to explore nature movies.";
-  else if (/search/i.test(userMsg)) reply = "Type a movie name in the search bar above 🔍.";
-  else if (/bye/i.test(userMsg)) reply = "Goodbye! 👋 Enjoy watching movies.";
+  if (/hello|hi/i.test(userMsg)) {
+    reply = "Hello 👋! Ask me about any movie (e.g., *Inception*).";
+  } 
+  else if (/bye/i.test(userMsg)) {
+    reply = "Goodbye! 👋 Enjoy watching movies.";
+  } 
+  else {
+    // Search in OMDb
+    const apiKey = "YOUR_OMDB_API_KEY"; // Replace with your OMDb API key
+    const url = `https://www.omdbapi.com/?t=${encodeURIComponent(userMsg)}&apikey=${apiKey}`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.Response === "True") {
+        reply = `
+          <b>${data.Title}</b> (${data.Year})<br>
+          ⭐ IMDB: ${data.imdbRating}<br>
+          🎭 Genre: ${data.Genre}<br>
+          📖 ${data.Plot}<br>
+          <img src="${data.Poster}" alt="Poster" width="100">
+        `;
+      } else {
+        reply = "I couldn’t find that movie 😔. Try another title!";
+      }
+    } catch (error) {
+      reply = "⚠️ Error fetching movie data. Please try again.";
+    }
+  }
 
   addMessage(reply, "botMsg");
 }
+</script>
