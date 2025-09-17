@@ -218,56 +218,65 @@ async function loadNatureMovies() {
     }
   }
 }
-// Chatbot Toggle
-const chatbotBtn = document.getElementById("chatbotBtn");
-const chatbotWindow = document.getElementById("chatbotWindow");
-const closeChat = document.getElementById("closeChat");
-const chatMessages = document.getElementById("chatMessages");
-const chatInput = document.getElementById("chatInput");
-const sendBtn = document.getElementById("sendBtn");
+import requests
 
-chatbotBtn.addEventListener("click", () => {
-  chatbotWindow.style.display = "flex";
-  chatbotBtn.style.display = "none";
-});
+# Replace with your own OMDb API key
+OMDB_API_KEY = '4da95259'  
 
-closeChat.addEventListener("click", () => {
-  chatbotWindow.style.display = "none";
-  chatbotBtn.style.display = "block";
-});
+def search_nature_movies(query):
+    url = "http://www.omdbapi.com/"
+    params = {
+        'apikey': OMDB_API_KEY,
+        's': query,
+        'type': 'movie'
+    }
 
-// Send Message
-sendBtn.addEventListener("click", sendMessage);
-chatInput.addEventListener("keyup", e => {
-  if (e.key === "Enter") sendMessage();
-});
+    response = requests.get(url, params=params)
+    data = response.json()
 
-function sendMessage() {
-  const msg = chatInput.value.trim();
-  if (!msg) return;
-  addMessage(msg, "userMsg");
-  chatInput.value = "";
-  setTimeout(() => botReply(msg), 600);
+    if data.get('Response') == 'True':
+        movies = data.get('Search', [])
+        results = []
+        for movie in movies[:5]:  # Limit to 5 results
+            results.append({
+                'title': movie.get('Title'),
+                'year': movie.get('Year'),
+                'imdbID': movie.get('imdbID')
+            })
+        return results
+    else:
+        return []
+
+def nature_chatbot():
+    print("🌱 Welcome to Nature MovieBot using OMDb API!")
+    print("Ask me for nature-themed movies like forests, oceans, wildlife, etc.")
+    print("Type 'exit' to quit.\n")
+
+    nature_keywords = ['forest', 'ocean', 'wildlife', 'mountain', 'nature', 'planet', 'desert', 'animals', 'earth', 'jungle']
+
+    while True:
+        user_input = input("You: ").strip().lower()
+
+        if user_input in ['exit', 'quit', 'bye']:
+            print("Bot: Goodbye! 🌿 Stay close to nature.")
+            break
+
+        # Try to detect nature-related words
+        if any(word in user_input for word in nature_keywords):
+            print("Bot: Searching for nature-themed movies...")
+            results = search_nature_movies(user_input)
+
+            if results:
+                print("🌍 Here are some nature-related movies you might like:")
+                for movie in results:
+                    print(f"🎬 {movie['title']} ({movie['year']}) - https://www.imdb.com/title/{movie['imdbID']}")
+            else:
+                print("Bot: Hmm, I couldn't find any matching nature movies.")
+        else:
+            print("Bot: Please ask about nature topics like oceans, forests, or wildlife.")
+
+# Run it
+if _name_ == "_main_":
+    nature_chatbot()
 }
 
-function addMessage(text, cls) {
-  const div = document.createElement("div");
-  div.classList.add("message", cls);
-  div.textContent = text;
-  chatMessages.appendChild(div);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-// Simple Bot Logic
-function botReply(userMsg) {
-  let reply = "Sorry, I didn’t understand that.";
-
-  if (/hello|hi/i.test(userMsg)) reply = "Hello 👋! Welcome to Cineflix Nature.";
-  else if (/trending/i.test(userMsg)) reply = "Click on the Trending tab to see trending movies!";
-  else if (/recommend/i.test(userMsg)) reply = "Add movies to your list first, then I’ll recommend similar ones 🌟.";
-  else if (/nature/i.test(userMsg)) reply = "Click the Nature button 🌿 to explore nature movies.";
-  else if (/search/i.test(userMsg)) reply = "Type a movie name in the search bar above 🔍.";
-  else if (/bye/i.test(userMsg)) reply = "Goodbye! 👋 Enjoy watching movies.";
-
-  addMessage(reply, "botMsg");
-}
